@@ -2,7 +2,7 @@ import imutils
 import cv2
 import time
 
-cam = cv2.VideoCapture("http://192.168.0.104:8080/vedio") # put the Ipwebcam address here to use mobile phone camera
+cam = cv2.VideoCapture("http://192.168.0.104:8080/video") # put the Ipwebcam address here to use mobile phone camera
 
 time.sleep(1)
 firstframe=None
@@ -20,11 +20,12 @@ while True:
     if firstframe is None:
         firstframe = gaussian_img
         continue
+
     # to find difference between "blur" and "black and white image"
     img_diff = cv2.absdiff(firstframe,gray_img)
 
     #set threshold to get fine result and dilate is used to remove noise from threshold image
-    threshold_img=cv2.threshold(img_diff,159,255,cv2.THRESH_BINARY)[1] # <- change second parameter according to your camera
+    threshold_img=cv2.threshold(img_diff,90,255,cv2.THRESH_BINARY)[1] # <- change second parameter according to your camera
     threshold_img = cv2.dilate(threshold_img,None,iterations=2)
     
     # find and grab contours
@@ -37,7 +38,8 @@ while True:
       
         (x,y,w,h) = cv2.boundingRect(a)
         cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
-        output ='moving object detected'    
+        output ='moving object detected'   
+    
     print(output)    
     # to put output on screen
     cv2.putText(img,output,(10,20),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,0,255),2)
